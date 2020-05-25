@@ -42,8 +42,34 @@ export const styleSheet = StyleSheet.create({
   },
   remainingTimeText: {
     fontSize: 56,
-    fontFamily: 'AppleSDGothicNeo-Light',
+    fontFamily: 'AppleSDGothicNeo-Medium',
     top: 60,
     textAlign: 'center',
+  },
+
+  timePickerView: {
+    width: '100%',
+    backgroundColor: '#314552',
+    bottom: 0,
+    position: 'absolute',
+  },
+  buttonsView: {
+    position: 'absolute',
+    top: 300,
+    left: 0,
+  },
+  temperature: {
+    fontFamily: 'AppleSDGothicNeo-Light',
+    fontSize: 24,
+    position: 'absolute',
+    top: 230,
+    left: 10,
+  },
+  humidity: {
+    fontFamily: 'AppleSDGothicNeo-Light',
+    fontSize: 24,
+    position: 'absolute',
+    top: 270,
+    left: 10,
   },
 });
