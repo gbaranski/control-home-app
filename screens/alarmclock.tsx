@@ -1,72 +1,27 @@
 import * as React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   Button,
   ButtonGroup,
   Layout,
   Text,
-  Icon,
   Modal,
   Card,
 } from '@ui-kitten/components';
 import {styleSheet} from './styles';
-import {View, Alert} from 'react-native';
+import {View} from 'react-native';
+
 import {useEffect, useState} from 'react';
-import {useInterval} from './helpers';
-
-const refreshIcon = (props: any) => (
-  <Icon {...props} name={'refresh-outline'} />
-);
-const addAlarmIcon = () => (
-  <MaterialIcons name="alarm-plus" size={18} color={'#ffff'} />
-);
-const testAlarmIcon = () => (
-  <MaterialIcons name="do-not-disturb" size={18} color={'#ffff'} />
-);
-const switchIconOn = () => (
-  <MaterialIcons
-    name="toggle-switch"
-    color={'#32a852'}
-    size={28}
-    style={styleSheet.switchIcon}
-  />
-);
-
-const switchIconOff = () => (
-  <MaterialIcons
-    name="toggle-switch-off"
-    color={'#ff453a'}
-    size={28}
-    style={styleSheet.switchIcon}
-  />
-);
-
-async function fetchUrl(
-  queryString: string,
-  username: string,
-  password: string,
-) {
-  const url =
-    `https://${username}:${password}@control.gbaranski.com` + queryString;
-  const response = await fetch(url, {
-    method: 'GET',
-  }).catch(() => {
-    return;
-  });
-  return response;
-}
-
-async function getRemoteData(username: string, password: string) {
-  const response = await fetch(
-    `https://${username}:${password}@control.gbaranski.com/getAlarmESPData`,
-    {
-      method: 'GET',
-    },
-  ).catch((error) => error);
-  return response.json();
-}
+import {useInterval, getData, fetchUrl, getRemoteData} from './helpers';
+import {
+  switchIconOn,
+  switchIconOff,
+  testAlarmIcon,
+  addAlarmIcon,
+  refreshIcon,
+} from './icons';
+import {DeviceTypes} from '../types';
 
 export default function Alarmclock() {
   const [username, setUsername] = React.useState('');
@@ -80,17 +35,17 @@ export default function Alarmclock() {
     humidity: 0,
     heatIndex: 0,
   });
-  const [isModalVisible, setModalVisiblity] = React.useState(false);
+  const [isModalVisible, setModalVisiblity] = useState(false);
 
   async function getAndSetData() {
     setModalVisiblity(true);
-    getRemoteData(username, password).then((json) => {
+    getRemoteData(username, password, DeviceTypes.ALARMCLOCK).then((json) => {
       setModalVisiblity(false);
       setRemoteData(json);
     });
   }
 
-  const [isTimePickerVisible, setTimePickerVisiblity] = React.useState(false);
+  const [isTimePickerVisible, setTimePickerVisiblity] = useState(false);
   const [outputTime, setOutputTime] = useState({
     hour: '',
     minute: '',
@@ -104,18 +59,10 @@ export default function Alarmclock() {
     });
   };
 
-  const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('credentials');
-      return jsonValue !== undefined ? JSON.parse(jsonValue || ' ') : undefined;
-    } catch (e) {
-      // error reading value
-      Alert.alert('Error reading value');
-    }
-  };
-
   useInterval(() => {
-    getRemoteData(username, password).then((json) => setRemoteData(json));
+    getRemoteData(username, password, DeviceTypes.ALARMCLOCK).then((json) =>
+      setRemoteData(json),
+    );
   }, 1000);
 
   useEffect(() => {
@@ -133,7 +80,7 @@ export default function Alarmclock() {
   }, []);
 
   return (
-    <Layout style={styleSheet.alarmClockLayout}>
+    <Layout style={styleSheet.basicLayout}>
       <View style={styleSheet.rowFlex}>
         <Text category="h6" style={styleSheet.aboveRemainingTimeText}>
           {'  '}
@@ -205,6 +152,7 @@ export default function Alarmclock() {
             username,
             password,
           ).then(() => {
+            setModalVisiblity(false);
             getAndSetData();
           });
         }}>

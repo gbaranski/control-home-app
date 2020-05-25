@@ -50,7 +50,7 @@ export const styleSheet = StyleSheet.create({
   modalBackdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  alarmClockLayout: {
+  basicLayout: {
     flex: 1,
     paddingTop: 60,
     alignItems: 'center',
@@ -71,10 +71,5 @@ export const styleSheet = StyleSheet.create({
   },
   switchStateButton: {
     marginTop: 5,
-  },
-  basicLayout: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

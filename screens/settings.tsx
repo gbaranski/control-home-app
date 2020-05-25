@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Text, Layout, Input, Icon, Button} from '@ui-kitten/components';
 import {TouchableWithoutFeedback, Alert} from 'react-native';
 import {styleSheet} from './styles';
+import {getData} from './helpers';
 
 const AlertIcon = (props: any) => (
   <Icon {...props} name="alert-circle-outline" />
@@ -12,16 +13,6 @@ export default function Settings() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-
-  const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('credentials');
-      return jsonValue !== undefined ? JSON.parse(jsonValue || ' ') : undefined;
-    } catch (e) {
-      // error reading value
-      Alert.alert('Error reading value');
-    }
-  };
 
   useEffect(() => {
     getData()
