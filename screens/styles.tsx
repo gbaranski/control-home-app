@@ -3,21 +3,21 @@ import {StyleSheet} from 'react-native';
 export const styleSheet = StyleSheet.create({
   aboveRemainingTimeText: {
     alignSelf: 'flex-start',
-    right: 30,
+    right: 25,
   },
   remainingTimeText: {
     alignSelf: 'flex-start',
-    right: 90,
+    right: 80,
     fontFamily: 'Courier',
     fontSize: 22,
   },
   aboveAlarmTimeText: {
     alignSelf: 'flex-end',
-    left: 30,
+    left: 25,
   },
   alarmTimeText: {
     alignSelf: 'flex-start',
-    left: 90,
+    left: 80,
     fontFamily: 'Courier',
     fontSize: 22,
   },
@@ -28,7 +28,7 @@ export const styleSheet = StyleSheet.create({
   },
   temperatureText: {
     alignSelf: 'flex-start',
-    right: 100,
+    right: 110,
     fontFamily: 'Courier',
     fontSize: 22,
   },
@@ -38,7 +38,7 @@ export const styleSheet = StyleSheet.create({
   },
   humidityText: {
     alignSelf: 'flex-start',
-    left: 100,
+    left: 110,
     fontFamily: 'Courier',
     fontSize: 22,
   },

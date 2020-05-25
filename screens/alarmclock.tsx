@@ -158,14 +158,14 @@ export default function Alarmclock() {
         </Text>
         <Text category="h6" style={styleSheet.aboveHumidityText}>
           HUMIDITY
-          <MaterialIcons name="water" size={20} />
+          <MaterialIcons name="water-outline" size={20} />
         </Text>
       </View>
       <View style={styleSheet.rowFlex}>
         <Text style={styleSheet.temperatureText}>
-          {remoteData.temperature || 'Loading..'}
+          {remoteData.temperature}°C
         </Text>
-        <Text style={styleSheet.humidityText}>{remoteData.humidity}</Text>
+        <Text style={styleSheet.humidityText}>{remoteData.humidity}%</Text>
       </View>
 
       <ButtonGroup style={styleSheet.buttonGroup}>
