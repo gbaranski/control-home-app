@@ -22,16 +22,39 @@ const testAlarmIcon = () => (
   <MaterialIcons name="do-not-disturb" size={18} color={'#ffff'} />
 );
 
+async function getRemoteData() {
+  const response = await fetch('http://192.168.1.10:3001/getESPData', {
+    method: 'GET',
+  });
+  return response.json();
+}
+
 export default function Alarmclock() {
+  const [remoteData, setRemoteData] = React.useState({
+    currentTime: '',
+    alarmTime: '',
+    remainingTime: '',
+    alarmState: '',
+    temperature: '',
+    humidity: '',
+    heatIndex: '',
+  });
+
   const [isTimePickerVisible, setTimePickerVisiblity] = React.useState(false);
+
   const [isModalVisible, setModalVisiblity] = React.useState(false);
-  const [modalText, setModalText] = React.useState(
-    'Please wait for request to complete.',
-  );
+
   const [activeChecked, setActiveChecked] = React.useState(false);
-  const onActiveCheckedChange = (isChecked) => {
+
+  const onActiveCheckedChange = (isChecked: boolean) => {
     setActiveChecked(isChecked);
   };
+
+  React.useEffect(() => {
+    setInterval(async () => {
+      getRemoteData().then((json) => setRemoteData(json));
+    }, 1000);
+  }, [remoteData.alarmState]);
   return (
     <Layout style={styleSheet.alarmClockLayout}>
       <View style={styleSheet.rowFlex}>
@@ -45,8 +68,10 @@ export default function Alarmclock() {
       </View>
 
       <View style={styleSheet.rowFlex}>
-        <Text style={styleSheet.remainingTimeText}>07:30</Text>
-        <Text style={styleSheet.alarmTimeText}>21:20</Text>
+        <Text style={styleSheet.remainingTimeText}>
+          {remoteData.remainingTime}
+        </Text>
+        <Text style={styleSheet.alarmTimeText}>{remoteData.alarmTime}</Text>
       </View>
 
       <View style={styleSheet.rowFlex}>
@@ -60,8 +85,10 @@ export default function Alarmclock() {
         </Text>
       </View>
       <View style={styleSheet.rowFlex}>
-        <Text style={styleSheet.temperatureText}>28.5°C</Text>
-        <Text style={styleSheet.humidityText}>28%</Text>
+        <Text style={styleSheet.temperatureText}>
+          {remoteData.temperature || 'Loading..'}
+        </Text>
+        <Text style={styleSheet.humidityText}>{remoteData.humidity}</Text>
       </View>
 
       <ButtonGroup style={styleSheet.buttonGroup}>
@@ -95,7 +122,7 @@ export default function Alarmclock() {
 
       <Modal visible={isModalVisible} backdropStyle={styleSheet.modalBackdrop}>
         <Card disabled={true}>
-          <Text>{modalText}</Text>
+          <Text>Please wait for request to complete.</Text>
           <Button onPress={() => setModalVisiblity(false)}>CANCEL</Button>
         </Card>
       </Modal>
