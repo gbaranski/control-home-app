@@ -19,3 +19,11 @@ export function useInterval(callback, delay) {
     }
   }, [delay]);
 }
+export function formatTotalSeconds(totalSeconds) {
+  return (
+    Math.floor((totalSeconds / 60) % 60) +
+    'minutes ' +
+    (totalSeconds % 60) +
+    'seconds'
+  );
+}

@@ -92,15 +92,15 @@ export default function Alarmclock() {
 
   const [isTimePickerVisible, setTimePickerVisiblity] = React.useState(false);
   const [outputTime, setOutputTime] = useState({
-    hour: new Date().getHours(),
-    minute: new Date().getMinutes(),
+    hour: '',
+    minute: '',
   });
   const [time, setTime] = useState(new Date());
   const onTimeChange = (event: Event, selectedTime: any) => {
     setTime(selectedTime || time);
     setOutputTime({
-      hour: selectedTime.getHours(),
-      minute: selectedTime.getMinutes(),
+      hour: ('0' + selectedTime.getHours()).slice(-2),
+      minute: ('0' + selectedTime.getMinutes()).slice(-2),
     });
   };
 
