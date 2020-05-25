@@ -13,7 +13,7 @@ import {
 } from '@ui-kitten/components';
 import {styleSheet} from './styles';
 import {View, Alert} from 'react-native';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useInterval} from './helpers';
 
 const refreshIcon = (props: any) => (
@@ -80,10 +80,29 @@ export default function Alarmclock() {
     humidity: 0,
     heatIndex: 0,
   });
+  const [isModalVisible, setModalVisiblity] = React.useState(false);
+
+  async function getAndSetData() {
+    setModalVisiblity(true);
+    getRemoteData(username, password).then((json) => {
+      setModalVisiblity(false);
+      setRemoteData(json);
+    });
+  }
 
   const [isTimePickerVisible, setTimePickerVisiblity] = React.useState(false);
-
-  const [isModalVisible, setModalVisiblity] = React.useState(false);
+  const [outputTime, setOutputTime] = useState({
+    hour: new Date().getHours(),
+    minute: new Date().getMinutes(),
+  });
+  const [time, setTime] = useState(new Date());
+  const onTimeChange = (event, selectedTime) => {
+    setTime(selectedTime || time);
+    setOutputTime({
+      hour: selectedTime.getHours(),
+      minute: selectedTime.getMinutes(),
+    });
+  };
 
   const getData = async () => {
     try {
@@ -170,11 +189,7 @@ export default function Alarmclock() {
         <Button
           accessoryRight={refreshIcon}
           onPress={async () => {
-            setModalVisiblity(true);
-            getRemoteData(username, password).then((json) => {
-              setModalVisiblity(false);
-              setRemoteData(json);
-            });
+            getAndSetData();
           }}>
           Fetch
         </Button>
@@ -183,8 +198,15 @@ export default function Alarmclock() {
       <Button
         style={{marginTop: 5}}
         accessoryRight={remoteData.alarmState ? switchIconOn : switchIconOff}
-        onPress={() => {
-          setTimePickerVisiblity(true);
+        onPress={async () => {
+          setModalVisiblity(true);
+          fetchUrl(
+            `/setAlarmState?state=${remoteData.alarmState ? 0 : 1}`,
+            username,
+            password,
+          ).then(() => {
+            getAndSetData();
+          });
         }}>
         Switch alarm state
       </Button>
@@ -200,13 +222,27 @@ export default function Alarmclock() {
         <View style={styleSheet.timePickerView}>
           <DateTimePicker
             testID="dateTimePicker"
-            timeZoneOffsetInMinutes={3600}
-            value={new Date()}
+            timeZoneOffsetInMinutes={120}
+            value={time}
+            onChange={onTimeChange}
             mode={'time'}
             is24Hour={true}
             display="default"
           />
-          <Button onPress={() => setTimePickerVisiblity(false)}>Done</Button>
+          <Button
+            onPress={async () => {
+              setTimePickerVisiblity(false);
+              setModalVisiblity(true);
+              fetchUrl(
+                `/setAlarm?time=${outputTime.hour}:${outputTime.minute}`,
+                username,
+                password,
+              ).then(async () => {
+                getAndSetData().then(() => setModalVisiblity(false));
+              });
+            }}>
+            Done
+          </Button>
         </View>
       )}
     </Layout>

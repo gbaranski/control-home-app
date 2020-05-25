@@ -1,6 +1,5 @@
 import * as React from 'react';
-import * as eva from '@eva-design/eva';
-import {ApplicationProvider, Layout, Text} from '@ui-kitten/components';
+import {Layout, Text} from '@ui-kitten/components';
 
 export default function Watermixer() {
   return (
