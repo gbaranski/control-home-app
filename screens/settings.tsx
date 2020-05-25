@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Text, Layout, Input, Icon, Button} from '@ui-kitten/components';
 import {TouchableWithoutFeedback, Alert} from 'react-native';
+import {styleSheet} from './styles';
 
 const AlertIcon = (props: any) => (
   <Icon {...props} name="alert-circle-outline" />
@@ -57,7 +58,7 @@ export default function Settings() {
   );
 
   return (
-    <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <Layout style={styleSheet.basicLayout}>
       <Text category="">Settings</Text>
       <Input
         placeholder="Your username here"

@@ -30,7 +30,7 @@ const switchIconOn = () => (
     name="toggle-switch"
     color={'#32a852'}
     size={28}
-    style={{height: 18, lineHeight: 23}}
+    style={styleSheet.switchIcon}
   />
 );
 
@@ -39,7 +39,7 @@ const switchIconOff = () => (
     name="toggle-switch-off"
     color={'#ff453a'}
     size={28}
-    style={{height: 18, lineHeight: 23}}
+    style={styleSheet.switchIcon}
   />
 );
 
@@ -96,7 +96,7 @@ export default function Alarmclock() {
     minute: new Date().getMinutes(),
   });
   const [time, setTime] = useState(new Date());
-  const onTimeChange = (event, selectedTime) => {
+  const onTimeChange = (event: Event, selectedTime: any) => {
     setTime(selectedTime || time);
     setOutputTime({
       hour: selectedTime.getHours(),
@@ -196,7 +196,7 @@ export default function Alarmclock() {
       </ButtonGroup>
 
       <Button
-        style={{marginTop: 5}}
+        style={styleSheet.switchStateButton}
         accessoryRight={remoteData.alarmState ? switchIconOn : switchIconOff}
         onPress={async () => {
           setModalVisiblity(true);

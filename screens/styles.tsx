@@ -65,4 +65,16 @@ export const styleSheet = StyleSheet.create({
     alignSelf: 'flex-start',
     marginTop: 10,
   },
+  switchIcon: {
+    height: 18,
+    lineHeight: 23,
+  },
+  switchStateButton: {
+    marginTop: 5,
+  },
+  basicLayout: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
