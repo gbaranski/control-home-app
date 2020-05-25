@@ -1,129 +1,72 @@
 import * as React from 'react';
-import {useState} from 'react';
-import {Text, View, Switch, TextInput, Button} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import DateTimePicker from '@react-native-community/datetimepicker';
-
+import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  Button,
+  ButtonGroup,
+  Layout,
+  Text,
+  Toggle,
+  Divider,
+  Icon,
+} from '@ui-kitten/components';
 import {styleSheet} from './styles';
+import {View} from 'react-native';
+
+const refreshIcon = (props) => <Icon {...props} name={'refresh-outline'} />;
+const addAlarmIcon = () => (
+  <MaterialIcons name="alarm-plus" size={18} color={'#ffff'} />
+);
+const testAlarmIcon = () => (
+  <MaterialIcons name="do-not-disturb" size={18} color={'#ffff'} />
+);
 
 export default function Alarmclock() {
-  const [alarmState, setAlarmState] = useState(false);
-
-  const toggleSwitchState = () => setAlarmState((alarmState) => !alarmState);
-
-  const [isTimePickerVisible, setTimePickerVisiblity] = useState(false);
-
-  const [timeValue, setTimeValue] = useState(new Date());
-
+  const [text, setText] = React.useState('Press any button');
+  const [activeChecked, setActiveChecked] = React.useState(false);
+  const onActiveCheckedChange = (isChecked) => {
+    setActiveChecked(isChecked);
+  };
   return (
-    <View style={{flex: 1, alignItems: 'center', backgroundColor: '#42D0C5'}}>
-      <View
-        style={{backgroundColor: '#314552', width: '100%', marginBottom: 30}}>
-        <Text
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            alignSelf: 'center',
-            padding: 40,
-            fontSize: 40,
-            color: 'white',
-          }}>
-          Alarm clock
+    <Layout style={{flex: 1, paddingTop: 60, alignItems: 'center'}}>
+      <View style={{flexDirection: 'row'}}>
+        <Text category="h6" style={{alignSelf: 'flex-start', left: -50}}>
+          <MaterialIcons name="thermometer" size={20} />
+          TEMPERATURE
+        </Text>
+        <Text category="h6" style={{alignSelf: 'flex-end', right: -50}}>
+          HUMIDITY
+          <MaterialIcons name="water" size={20} />
         </Text>
       </View>
-      <Text style={styleSheet.aboveCurrentTimeText}>Current time</Text>
-      <Text style={styleSheet.currentTimeText}>12.30</Text>
-      <Text style={styleSheet.aboveAlarmTimeText}>Alarm time</Text>
-      <Text style={styleSheet.alarmTimeText}>21.30</Text>
-      <Text style={styleSheet.aboveRemainingTimeText}>Remaining time</Text>
-      <Text style={styleSheet.remainingTimeText}>09:30</Text>
-      <View style={styleSheet.temperature}>
-        <Text style={{fontSize: 24}}>
-          <MaterialCommunityIcons name={'thermometer'} size={24} />
-          36°C
-        </Text>
-      </View>
-      <View style={styleSheet.humidity}>
-        <Text style={{fontSize: 24}}>
-          <MaterialCommunityIcons
-            name={'water-outline'}
-            size={24}
-            color={'#031C57'}
-          />
-          50%
-        </Text>
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styleSheet.temperatureText}>28.5°C</Text>
+        <Text style={styleSheet.humidityText}>28%</Text>
       </View>
 
-      <View
-        style={{
-          left: 5,
-          top: 320,
-          position: 'absolute',
-          backgroundColor: '#1677BF',
-          borderRadius: 10,
-        }}>
+      <Text category="h3">{text}</Text>
+      <ButtonGroup>
         <Button
-          title="Test alarm!"
-          color="white"
-          onPress={() => setTimePickerVisiblity(true)}
-        />
-      </View>
-
-      <View
-        style={{
-          left: 120,
-          top: 320,
-          position: 'absolute',
-          backgroundColor: '#1677BF',
-          borderRadius: 10,
-        }}>
+          accessoryRight={testAlarmIcon}
+          onPress={() => setText('Left button pressed')}>
+          Test alarm
+        </Button>
         <Button
-          title="Set time!"
-          color="white"
-          onPress={() => setTimePickerVisiblity(true)}
-        />
-      </View>
-      <View
-        style={{
-          left: 220,
-          top: 320,
-          position: 'absolute',
-          backgroundColor: '#1677BF',
-          borderRadius: 10,
-        }}>
+          accessoryRight={addAlarmIcon}
+          onPress={() => setText('Middle button pressed')}>
+          Set Alarm
+        </Button>
         <Button
-          title="Fetch data"
-          color="white"
-          onPress={() => setTimePickerVisiblity(true)}
-        />
-      </View>
-      <Switch
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{
-          position: 'absolute',
-          top: 325,
-          right: 5,
-          transform: [{rotate: '90deg'}],
-        }} // TODO FIX
-        trackColor={{false: '#767577', true: '#30d158'}}
-        thumbColor={'#f2f2f7'}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={toggleSwitchState}
-        value={alarmState}
-      />
-      {isTimePickerVisible && (
-        <View style={styleSheet.timePickerView}>
-          <DateTimePicker
-            testID="dateTimePicker"
-            timeZoneOffsetInMinutes={0}
-            value={timeValue}
-            mode={'time'}
-            is24Hour={true}
-            display="default"
-          />
-          <Button title="Done" onPress={() => setTimePickerVisiblity(false)} />
-        </View>
-      )}
-    </View>
+          accessoryRight={refreshIcon}
+          onPress={() => setText('Right button pressed')}>
+          Fetch
+        </Button>
+      </ButtonGroup>
+      <Toggle
+        style={{alignSelf: 'flex-start', marginTop: 10}}
+        checked={activeChecked}
+        onChange={onActiveCheckedChange}>
+        Alarm clock state
+      </Toggle>
+    </Layout>
   );
 }

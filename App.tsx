@@ -1,36 +1,59 @@
-import * as React from 'react';
+import React from 'react';
+import * as eva from '@eva-design/eva';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {EvaIconsPack} from '@ui-kitten/eva-icons';
+
+import {
+  BottomNavigation,
+  BottomNavigationTab,
+  Icon,
+  ApplicationProvider,
+  IconRegistry,
+} from '@ui-kitten/components';
 import Alarmclock from './screens/alarmclock';
 import Watermixer from './screens/watermixer';
 
-const Tab = createBottomTabNavigator();
+const WaterIcon = (props) => <Icon {...props} name="droplet-outline" />;
+const WaterIconFill = (props) => <Icon {...props} name="droplet" />;
+
+const AlarmIcon = (props) => <Icon {...props} name="clock-outline" />;
+const AlarmIconFill = (props) => <Icon {...props} name="clock" />;
+const {Navigator, Screen} = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color, size}) => {
-            const iconName = route.name === 'Alarmclock' ? 'alarm' : 'water';
-            // You can return any component that you like here!
-            return (
-              <MaterialCommunityIcons
-                name={iconName || ''}
-                size={size}
-                color={color}
-              />
-            );
-          },
-        })}
-        tabBarOptions={{
-          activeTintColor: 'tomato',
-          inactiveTintColor: 'gray',
-        }}>
-        <Tab.Screen name="Alarmclock" component={Alarmclock} />
-        <Tab.Screen name="Watermixer" component={Watermixer} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider {...eva} theme={{...eva.dark}}>
+        <NavigationContainer>
+          <TabNavigator />
+        </NavigationContainer>
+      </ApplicationProvider>
+    </>
   );
 }
+
+export function TabNavigator() {
+  return (
+    <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
+      <Screen name="Users" component={Alarmclock} />
+      <Screen name="Orders" component={Watermixer} />
+    </Navigator>
+  );
+}
+
+const BottomTabBar = ({navigation, state}) => (
+  <BottomNavigation
+    selectedIndex={state.index}
+    onSelect={(index) => navigation.navigate(state.routeNames[index])}>
+    <BottomNavigationTab
+      icon={state.index === 0 ? AlarmIconFill : AlarmIcon}
+      title="USERS"
+    />
+    <BottomNavigationTab
+      icon={state.index === 1 ? WaterIconFill : WaterIcon}
+      title="ORDERS"
+    />
+  </BottomNavigation>
+);

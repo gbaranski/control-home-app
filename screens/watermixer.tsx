@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {Text, View} from 'react-native';
+import * as eva from '@eva-design/eva';
+import {ApplicationProvider, Layout, Text} from '@ui-kitten/components';
 
 export default function Watermixer() {
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Watermixer screen</Text>
-    </View>
+    <Layout style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text category="h1">HOME</Text>
+    </Layout>
   );
 }
