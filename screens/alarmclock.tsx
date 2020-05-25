@@ -35,6 +35,21 @@ export default function Alarmclock() {
   return (
     <Layout style={styleSheet.alarmClockLayout}>
       <View style={styleSheet.rowFlex}>
+        <Text category="h6" style={styleSheet.aboveRemainingTimeText}>
+          {'  '}
+          <MaterialIcons name="clock" size={18} /> REMAINING TIME
+        </Text>
+        <Text category="h6" style={styleSheet.aboveAlarmTimeText}>
+          ALARM TIME <MaterialIcons name="clock-outline" size={18} />{' '}
+        </Text>
+      </View>
+
+      <View style={styleSheet.rowFlex}>
+        <Text style={styleSheet.remainingTimeText}>07:30</Text>
+        <Text style={styleSheet.alarmTimeText}>21:20</Text>
+      </View>
+
+      <View style={styleSheet.rowFlex}>
         <Text category="h6" style={styleSheet.aboveTemperatureText}>
           <MaterialIcons name="thermometer" size={20} />
           TEMPERATURE

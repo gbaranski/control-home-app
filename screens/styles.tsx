@@ -1,7 +1,27 @@
 import {StyleSheet} from 'react-native';
 
 export const styleSheet = StyleSheet.create({
-  // CURRENT TIME
+  aboveRemainingTimeText: {
+    alignSelf: 'flex-start',
+    right: 30,
+  },
+  remainingTimeText: {
+    alignSelf: 'flex-start',
+    right: 90,
+    fontFamily: 'Courier',
+    fontSize: 22,
+  },
+  aboveAlarmTimeText: {
+    alignSelf: 'flex-end',
+    left: 30,
+  },
+  alarmTimeText: {
+    alignSelf: 'flex-start',
+    left: 90,
+    fontFamily: 'Courier',
+    fontSize: 22,
+  },
+
   aboveTemperatureText: {
     alignSelf: 'flex-start',
     left: -50,

@@ -49,11 +49,11 @@ const BottomTabBar = ({navigation, state}) => (
     onSelect={(index) => navigation.navigate(state.routeNames[index])}>
     <BottomNavigationTab
       icon={state.index === 0 ? AlarmIconFill : AlarmIcon}
-      title="USERS"
+      title="ALARMCLOCK"
     />
     <BottomNavigationTab
       icon={state.index === 1 ? WaterIconFill : WaterIcon}
-      title="ORDERS"
+      title="WATERMIXER"
     />
   </BottomNavigation>
 );
