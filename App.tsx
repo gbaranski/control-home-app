@@ -13,12 +13,17 @@ import {
 } from '@ui-kitten/components';
 import Alarmclock from './screens/alarmclock';
 import Watermixer from './screens/watermixer';
+import Settings from './screens/settings';
 
 const WaterIcon = (props) => <Icon {...props} name="droplet-outline" />;
 const WaterIconFill = (props) => <Icon {...props} name="droplet" />;
 
 const AlarmIcon = (props) => <Icon {...props} name="clock-outline" />;
 const AlarmIconFill = (props) => <Icon {...props} name="clock" />;
+
+const SettingsIcon = (props) => <Icon {...props} name="settings-outline" />;
+const SettingsIconFill = (props) => <Icon {...props} name="settings" />;
+
 const {Navigator, Screen} = createBottomTabNavigator();
 
 export default function App() {
@@ -37,8 +42,9 @@ export default function App() {
 export function TabNavigator() {
   return (
     <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
-      <Screen name="Users" component={Alarmclock} />
-      <Screen name="Orders" component={Watermixer} />
+      <Screen name="Alarmclock" component={Alarmclock} />
+      <Screen name="Watermixer" component={Watermixer} />
+      <Screen name="Settings" component={Settings} />
     </Navigator>
   );
 }
@@ -54,6 +60,10 @@ const BottomTabBar = ({navigation, state}) => (
     <BottomNavigationTab
       icon={state.index === 1 ? WaterIconFill : WaterIcon}
       title="WATERMIXER"
+    />
+    <BottomNavigationTab
+      icon={state.index === 2 ? SettingsIconFill : SettingsIcon}
+      title="SETTINGS"
     />
   </BottomNavigation>
 );

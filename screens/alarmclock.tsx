@@ -1,60 +1,118 @@
 import * as React from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   Button,
   ButtonGroup,
   Layout,
   Text,
-  Toggle,
   Icon,
   Modal,
   Card,
 } from '@ui-kitten/components';
 import {styleSheet} from './styles';
-import {View} from 'react-native';
+import {View, Alert} from 'react-native';
+import {useEffect} from 'react';
+import {useInterval} from './helpers';
 
-const refreshIcon = (props) => <Icon {...props} name={'refresh-outline'} />;
+const refreshIcon = (props: any) => (
+  <Icon {...props} name={'refresh-outline'} />
+);
 const addAlarmIcon = () => (
   <MaterialIcons name="alarm-plus" size={18} color={'#ffff'} />
 );
 const testAlarmIcon = () => (
   <MaterialIcons name="do-not-disturb" size={18} color={'#ffff'} />
 );
+const switchIconOn = () => (
+  <MaterialIcons
+    name="toggle-switch"
+    color={'#32a852'}
+    size={28}
+    style={{height: 18, lineHeight: 23}}
+  />
+);
 
-async function getRemoteData() {
-  const response = await fetch('http://192.168.1.10:3001/getESPData', {
+const switchIconOff = () => (
+  <MaterialIcons
+    name="toggle-switch-off"
+    color={'#ff453a'}
+    size={28}
+    style={{height: 18, lineHeight: 23}}
+  />
+);
+
+async function fetchUrl(
+  queryString: string,
+  username: string,
+  password: string,
+) {
+  const url =
+    `https://${username}:${password}@control.gbaranski.com` + queryString;
+  const response = await fetch(url, {
     method: 'GET',
+  }).catch(() => {
+    return;
   });
+  return response;
+}
+
+async function getRemoteData(username: string, password: string) {
+  const response = await fetch(
+    `https://${username}:${password}@control.gbaranski.com/getAlarmESPData`,
+    {
+      method: 'GET',
+    },
+  ).catch((error) => error);
   return response.json();
 }
 
 export default function Alarmclock() {
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [remoteData, setRemoteData] = React.useState({
     currentTime: '',
     alarmTime: '',
     remainingTime: '',
-    alarmState: '',
-    temperature: '',
-    humidity: '',
-    heatIndex: '',
+    alarmState: 0,
+    temperature: 0,
+    humidity: 0,
+    heatIndex: 0,
   });
 
   const [isTimePickerVisible, setTimePickerVisiblity] = React.useState(false);
 
   const [isModalVisible, setModalVisiblity] = React.useState(false);
 
-  const [activeChecked, setActiveChecked] = React.useState(false);
-
-  const onActiveCheckedChange = (isChecked: boolean) => {
-    setActiveChecked(isChecked);
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('credentials');
+      return jsonValue !== undefined ? JSON.parse(jsonValue || ' ') : undefined;
+    } catch (e) {
+      // error reading value
+      Alert.alert('Error reading value');
+    }
   };
 
-  React.useEffect(() => {
-    setInterval(async () => {
-      getRemoteData().then((json) => setRemoteData(json));
-    }, 1000);
-  }, [remoteData.alarmState]);
+  useInterval(() => {
+    getRemoteData(username, password).then((json) => setRemoteData(json));
+  }, 1000);
+
+  useEffect(() => {
+    // setInterval(async () => {
+    //   getRemoteData().then((json) => setRemoteData(json));
+    // }, 1000);
+    getData()
+      .then((credentials) => {
+        if (credentials && credentials.username && credentials.password) {
+          setUsername(credentials.username);
+          setPassword(credentials.password);
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   return (
     <Layout style={styleSheet.alarmClockLayout}>
       <View style={styleSheet.rowFlex}>
@@ -94,8 +152,12 @@ export default function Alarmclock() {
       <ButtonGroup style={styleSheet.buttonGroup}>
         <Button
           accessoryRight={testAlarmIcon}
-          // onPress={() => setText('Left button pressed')}
-        >
+          onPress={async () => {
+            setModalVisiblity(true);
+            fetchUrl('/testAlarm', username, password).then(() => {
+              setModalVisiblity(false);
+            });
+          }}>
           Test alarm
         </Button>
         <Button
@@ -107,18 +169,25 @@ export default function Alarmclock() {
         </Button>
         <Button
           accessoryRight={refreshIcon}
-          onPress={() => {
+          onPress={async () => {
             setModalVisiblity(true);
+            getRemoteData(username, password).then((json) => {
+              setModalVisiblity(false);
+              setRemoteData(json);
+            });
           }}>
           Fetch
         </Button>
       </ButtonGroup>
-      <Toggle
-        style={styleSheet.toggleState}
-        checked={activeChecked}
-        onChange={onActiveCheckedChange}>
-        Alarm clock state
-      </Toggle>
+
+      <Button
+        style={{marginTop: 5}}
+        accessoryRight={remoteData.alarmState ? switchIconOn : switchIconOff}
+        onPress={() => {
+          setTimePickerVisiblity(true);
+        }}>
+        Switch alarm state
+      </Button>
 
       <Modal visible={isModalVisible} backdropStyle={styleSheet.modalBackdrop}>
         <Card disabled={true}>
