@@ -213,7 +213,7 @@ export default function Alarmclock() {
 
       <Modal visible={isModalVisible} backdropStyle={styleSheet.modalBackdrop}>
         <Card disabled={true}>
-          <Text>Please wait for request to complete.</Text>
+          <Text>Please wait for request to complete.{'\n'}</Text>
           <Button onPress={() => setModalVisiblity(false)}>CANCEL</Button>
         </Card>
       </Modal>
