@@ -50,7 +50,7 @@ export default function Settings() {
 
   return (
     <Layout style={styleSheet.basicLayout}>
-      <Text category="">Settings</Text>
+      <Text>Settings</Text>
       <Input
         placeholder="Your username here"
         label="  USERNAME"

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import * as eva from '@eva-design/eva';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
-
+import {Alert} from 'react-native';
+import messaging, {AuthorizationStatus} from '@react-native-firebase/messaging';
+import {AppRegistry} from 'react-native';
 import {
   BottomNavigation,
   BottomNavigationTab,
@@ -26,7 +28,38 @@ const SettingsIconFill = (props) => <Icon {...props} name="settings" />;
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
+async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === AuthorizationStatus.AUTHORIZED ||
+    authStatus === AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('Authorization status:', authStatus);
+  }
+}
+
+// Register background handler
+messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  console.log('Message handled in the background!', remoteMessage);
+});
+
+AppRegistry.registerComponent('app', () => App);
+
 export default function App() {
+  useEffect(() => {
+    requestUserPermission();
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      Alert.alert(
+        remoteMessage.notification.title,
+        remoteMessage.notification.body,
+      );
+    });
+
+    return unsubscribe;
+  }, []);
+
+  requestUserPermission();
   return (
     <>
       <IconRegistry icons={EvaIconsPack} />
