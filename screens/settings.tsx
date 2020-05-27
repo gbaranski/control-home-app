@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Text, Layout, Input, Icon, Button} from '@ui-kitten/components';
 import {TouchableWithoutFeedback, Alert} from 'react-native';
@@ -13,6 +14,7 @@ export default function Settings() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [isAdmin, setAdmin] = useState(false);
 
   useEffect(() => {
     getData()
@@ -20,6 +22,18 @@ export default function Settings() {
         if (credentials && credentials.username && credentials.password) {
           setUsername(credentials.username);
           setPassword(credentials.password);
+          if (credentials.username === 'gbaranski') {
+            Alert.alert('Authenticated as admin');
+            messaging()
+              .subscribeToTopic('admin')
+              .then(() => console.log('Subscribed to topic admin'))
+              .then(() => setAdmin(true));
+          } else {
+            messaging()
+              .unsubscribeFromTopic('admin')
+              .then(() => console.log('unsubscribed from topic admin'))
+              .then(() => setAdmin(false));
+          }
         }
       })
       .catch(console.error);
@@ -68,6 +82,9 @@ export default function Settings() {
         onChangeText={(nextValue) => setPassword(nextValue)}
       />
       <Button onPress={saveEntry}>SAVE</Button>
+      <Text style={styleSheet.userInfo}>
+        USER INFO {'\n'}Admin: {isAdmin ? 'TRUE' : 'FALSE'}
+      </Text>
     </Layout>
   );
 }

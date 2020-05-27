@@ -13,6 +13,7 @@ import {
   ApplicationProvider,
   IconRegistry,
 } from '@ui-kitten/components';
+import {getData} from './screens/helpers';
 import Alarmclock from './screens/alarmclock';
 import Watermixer from './screens/watermixer';
 import Settings from './screens/settings';
@@ -50,12 +51,9 @@ export default function App() {
   useEffect(() => {
     requestUserPermission();
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      Alert.alert(
-        remoteMessage.notification.title,
-        remoteMessage.notification.body,
-      );
+      console.log(remoteMessage);
+      Alert.alert(remoteMessage.data.title, remoteMessage.data.body);
     });
-
     return unsubscribe;
   }, []);
 

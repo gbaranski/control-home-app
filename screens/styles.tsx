@@ -72,4 +72,7 @@ export const styleSheet = StyleSheet.create({
   switchStateButton: {
     marginTop: 5,
   },
+  userInfo: {
+    alignSelf: 'flex-start',
+  },
 });
