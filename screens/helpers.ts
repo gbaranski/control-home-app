@@ -42,14 +42,15 @@ export const getData = async () => {
 };
 
 export async function fetchUrl(
-  queryString: string,
+  path: string,
+  headers: Headers,
   username: string,
   password: string,
 ) {
-  const url =
-    `https://${username}:${password}@control.gbaranski.com` + queryString;
+  const url = `https://${username}:${password}@control.gbaranski.com` + path;
   const response = await fetch(url, {
-    method: 'GET',
+    method: 'POST',
+    headers,
   }).catch(() => {
     return;
   });

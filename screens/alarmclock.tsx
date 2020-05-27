@@ -66,9 +66,6 @@ export default function Alarmclock() {
   }, 1000);
 
   useEffect(() => {
-    // setInterval(async () => {
-    //   getRemoteData().then((json) => setRemoteData(json));
-    // }, 1000);
     getData()
       .then((credentials) => {
         if (credentials && credentials.username && credentials.password) {
@@ -120,7 +117,8 @@ export default function Alarmclock() {
           accessoryRight={testAlarmIcon}
           onPress={async () => {
             setModalVisiblity(true);
-            fetchUrl('/testAlarm', username, password).then(() => {
+            const headers = new Headers();
+            fetchUrl('/testAlarm', headers, username, password).then(() => {
               setModalVisiblity(false);
             });
           }}>
@@ -147,11 +145,9 @@ export default function Alarmclock() {
         accessoryRight={remoteData.alarmState ? switchIconOn : switchIconOff}
         onPress={async () => {
           setModalVisiblity(true);
-          fetchUrl(
-            `/setAlarmState?state=${remoteData.alarmState ? 0 : 1}`,
-            username,
-            password,
-          ).then(() => {
+          const headers = new Headers();
+          headers.append('state', `${remoteData.alarmState ? 0 : 1}`);
+          fetchUrl('/setAlarmState', headers, username, password).then(() => {
             setModalVisiblity(false);
             getAndSetData();
           });
@@ -181,13 +177,13 @@ export default function Alarmclock() {
             onPress={async () => {
               setTimePickerVisiblity(false);
               setModalVisiblity(true);
-              fetchUrl(
-                `/setAlarm?time=${outputTime.hour}:${outputTime.minute}`,
-                username,
-                password,
-              ).then(async () => {
-                getAndSetData().then(() => setModalVisiblity(false));
-              });
+              const headers = new Headers();
+              headers.append('time', `${outputTime.hour}:${outputTime.minute}`);
+              fetchUrl('/setAlarm', headers, username, password).then(
+                async () => {
+                  getAndSetData().then(() => setModalVisiblity(false));
+                },
+              );
             }}>
             Done
           </Button>
