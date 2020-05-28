@@ -10,7 +10,7 @@ import {
   Card,
 } from '@ui-kitten/components';
 import {styleSheet} from './styles';
-import {View} from 'react-native';
+import {View, Alert} from 'react-native';
 
 import {useEffect, useState} from 'react';
 import {useInterval, getData, fetchUrl, getRemoteData} from './helpers';
@@ -24,8 +24,6 @@ import {
 import {DeviceTypes} from '../types';
 
 export default function Alarmclock() {
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
   const [remoteData, setRemoteData] = React.useState({
     currentTime: '',
     alarmTime: '',
@@ -39,9 +37,13 @@ export default function Alarmclock() {
 
   async function getAndSetData() {
     setModalVisiblity(true);
-    getRemoteData(username, password, DeviceTypes.ALARMCLOCK).then((json) => {
-      setModalVisiblity(false);
-      setRemoteData(json);
+    getRemoteData(DeviceTypes.ALARMCLOCK).then(async (response) => {
+      if (response.ok) {
+        setModalVisiblity(false);
+        setRemoteData(JSON.parse(await response.json()));
+      } else {
+        Alert.alert('Response is not okay');
+      }
     });
   }
 
@@ -60,17 +62,20 @@ export default function Alarmclock() {
   };
 
   useInterval(() => {
-    getRemoteData(username, password, DeviceTypes.ALARMCLOCK).then((json) =>
-      setRemoteData(json),
-    );
+    getRemoteData(DeviceTypes.ALARMCLOCK).then(async (response) => {
+      if (response.ok) {
+        setRemoteData(JSON.parse(await response.json()));
+      } else {
+        console.warn('Wrong response');
+      }
+    });
   }, 1000);
 
   useEffect(() => {
     getData()
       .then((credentials) => {
-        if (credentials && credentials.username && credentials.password) {
-          setUsername(credentials.username);
-          setPassword(credentials.password);
+        if (!credentials || !credentials.username || !credentials.password) {
+          Alert.alert('Alert!', 'Login or password are undefined values');
         }
       })
       .catch(console.error);
@@ -118,7 +123,7 @@ export default function Alarmclock() {
           onPress={async () => {
             setModalVisiblity(true);
             const headers = new Headers();
-            fetchUrl('/testAlarm', headers, username, password).then(() => {
+            fetchUrl('/api/alarmclock/testSiren', headers).then(() => {
               setModalVisiblity(false);
             });
           }}>
@@ -147,7 +152,7 @@ export default function Alarmclock() {
           setModalVisiblity(true);
           const headers = new Headers();
           headers.append('state', `${remoteData.alarmState ? 0 : 1}`);
-          fetchUrl('/setAlarmState', headers, username, password).then(() => {
+          fetchUrl('/api/alarmclock/switchState', headers).then(() => {
             setModalVisiblity(false);
             getAndSetData();
           });
@@ -179,11 +184,9 @@ export default function Alarmclock() {
               setModalVisiblity(true);
               const headers = new Headers();
               headers.append('time', `${outputTime.hour}:${outputTime.minute}`);
-              fetchUrl('/setAlarm', headers, username, password).then(
-                async () => {
-                  getAndSetData().then(() => setModalVisiblity(false));
-                },
-              );
+              fetchUrl('/api/alarmclock/setTime', headers).then(async () => {
+                getAndSetData().then(() => setModalVisiblity(false));
+              });
             }}>
             Done
           </Button>

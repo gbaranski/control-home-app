@@ -41,32 +41,37 @@ export const getData = async () => {
   }
 };
 
-export async function fetchUrl(
-  path: string,
-  headers: Headers,
-  username: string,
-  password: string,
-) {
-  const url = `https://${username}:${password}@control.gbaranski.com` + path;
+export async function fetchUrl(path: string, headers: Headers) {
+  await getData().then((credentials) => {
+    if (credentials && credentials.username && credentials.password) {
+      headers.append('username', credentials.username);
+      headers.append('password', credentials.password);
+    }
+  });
+
+  const url = `https://api.gbaranski.com` + path;
   const response = await fetch(url, {
     method: 'POST',
     headers,
-  }).catch(() => {
-    return;
   });
   return response;
 }
 
-export async function getRemoteData(
-  username: string,
-  password: string,
-  deviceType: DeviceTypes,
-) {
+export async function getRemoteData(deviceType: DeviceTypes) {
+  const headers = new Headers();
+
+  await getData().then((credentials) => {
+    if (credentials && credentials.username && credentials.password) {
+      headers.append('username', credentials.username);
+      headers.append('password', credentials.password);
+    }
+  });
   const response = await fetch(
-    `https://${username}:${password}@control.gbaranski.com/get${deviceType}ESPData`,
+    `https://api.gbaranski.com/api/${deviceType}/getData`,
     {
-      method: 'GET',
+      method: 'POST',
+      headers,
     },
-  ).catch((error) => error);
-  return response.json();
+  );
+  return response;
 }

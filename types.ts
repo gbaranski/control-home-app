@@ -1,4 +1,4 @@
 export enum DeviceTypes {
-  ALARMCLOCK = 'Alarmclock',
-  WATERMIXER = 'Watermixer',
+  ALARMCLOCK = 'alarmclock',
+  WATERMIXER = 'watermixer',
 }

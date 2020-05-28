@@ -13,8 +13,6 @@ import {switchIconOn, switchIconOff} from './icons';
 import {DeviceTypes} from '../types';
 
 export default function Watermixer() {
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
   const [remoteData, setRemoteData] = React.useState({
     remainingSeconds: 0,
     isTimerOn: 0,
@@ -24,18 +22,21 @@ export default function Watermixer() {
   useEffect(() => {
     getData()
       .then((credentials) => {
-        if (credentials && credentials.username && credentials.password) {
-          setUsername(credentials.username);
-          setPassword(credentials.password);
+        if (!credentials || !credentials.username || !credentials.password) {
+          console.warn('Login or password are undefined values');
         }
       })
       .catch(console.error);
   }, []);
 
   useInterval(() => {
-    getRemoteData(username, password, DeviceTypes.WATERMIXER).then((json) =>
-      setRemoteData(json),
-    );
+    getRemoteData(DeviceTypes.WATERMIXER).then(async (response) => {
+      if (response.ok) {
+        setRemoteData(JSON.parse(await response.json()));
+      } else {
+        console.warn('Wrong request');
+      }
+    });
     // Alert.alert(String(remoteData.remainingSeconds));
   }, 1000);
 
@@ -50,7 +51,8 @@ export default function Watermixer() {
         accessoryRight={remoteData.isTimerOn ? switchIconOn : switchIconOff}
         onPress={async () => {
           setModalVisiblity(true);
-          fetchUrl('/startMixing', username, password).then(() => {
+          const headers = new Headers();
+          fetchUrl('/api/watermixer/start', headers).then(() => {
             setModalVisiblity(false);
           });
         }}>
