@@ -1,39 +1,39 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import * as eva from '@eva-design/eva';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, NavigationState} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {Alert} from 'react-native';
-import messaging, {AuthorizationStatus} from '@react-native-firebase/messaging';
+import messaging from '@react-native-firebase/messaging';
 import {AppRegistry} from 'react-native';
 import {
   BottomNavigation,
   BottomNavigationTab,
-  Icon,
   ApplicationProvider,
   IconRegistry,
 } from '@ui-kitten/components';
-import {getData} from './screens/helpers';
 import Alarmclock from './screens/alarmclock';
 import Watermixer from './screens/watermixer';
 import Settings from './screens/settings';
-
-const WaterIcon = (props) => <Icon {...props} name="droplet-outline" />;
-const WaterIconFill = (props) => <Icon {...props} name="droplet" />;
-
-const AlarmIcon = (props) => <Icon {...props} name="clock-outline" />;
-const AlarmIconFill = (props) => <Icon {...props} name="clock" />;
-
-const SettingsIcon = (props) => <Icon {...props} name="settings-outline" />;
-const SettingsIconFill = (props) => <Icon {...props} name="settings" />;
+import {
+  AlarmIconFill,
+  AlarmIcon,
+  WaterIcon,
+  WaterIconFill,
+  SettingsIconFill,
+  SettingsIcon,
+} from './assets/icons';
+import {getData, authMe} from './helpers';
+import {Credentials} from './types';
+import LoginPage from './screens/login';
 
 const {Navigator, Screen} = createBottomTabNavigator();
 
 async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
   const enabled =
-    authStatus === AuthorizationStatus.AUTHORIZED ||
-    authStatus === AuthorizationStatus.PROVISIONAL;
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
   if (enabled) {
     console.log('Authorization status:', authStatus);
@@ -48,23 +48,47 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
 AppRegistry.registerComponent('app', () => App);
 
 export default function App() {
+  const [isLoggedIn, setLoggedIn] = useState<boolean>(false);
+
   useEffect(() => {
     requestUserPermission();
+
+    getData().then(async (_credentials: Credentials) => {
+      if (_credentials && _credentials.username && _credentials.password) {
+        const headers = new Headers();
+        headers.append('username', _credentials.username);
+        headers.append('password', _credentials.password);
+
+        const statusCode = await authMe(headers);
+        if (statusCode === 200) {
+          setLoggedIn(true);
+        } else if (statusCode === 401) {
+          Alert.alert('Info', "Sorry, you're not authenticated");
+        } else {
+          Alert.alert('Info', 'Error! Try again later');
+        }
+      }
+    });
+
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       console.log(remoteMessage);
-      Alert.alert(remoteMessage.data.title, remoteMessage.data.body);
+      if (remoteMessage.data) {
+        Alert.alert(remoteMessage.data.title, remoteMessage.data.body);
+      }
     });
     return unsubscribe;
   }, []);
 
-  requestUserPermission();
   return (
     <>
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={{...eva.dark}}>
-        <NavigationContainer>
-          <TabNavigator />
-        </NavigationContainer>
+        {!isLoggedIn && <LoginPage setLoggedIn={setLoggedIn} />}
+        {isLoggedIn && (
+          <NavigationContainer>
+            <TabNavigator />
+          </NavigationContainer>
+        )}
       </ApplicationProvider>
     </>
   );
@@ -80,7 +104,7 @@ export function TabNavigator() {
   );
 }
 
-const BottomTabBar = ({navigation, state}) => (
+const BottomTabBar = (navigation: any, state: NavigationState) => (
   <BottomNavigation
     selectedIndex={state.index}
     onSelect={(index) => navigation.navigate(state.routeNames[index])}>

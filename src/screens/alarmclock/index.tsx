@@ -9,19 +9,19 @@ import {
   Modal,
   Card,
 } from '@ui-kitten/components';
-import {styleSheet} from './styles';
+import styleSheet from '../../styles';
 import {View, Alert} from 'react-native';
 
 import {useEffect, useState} from 'react';
-import {useInterval, getData, fetchUrl, getRemoteData} from './helpers';
+import {useInterval, getData, fetchUrl, getRemoteData} from '../../helpers';
 import {
   switchIconOn,
   switchIconOff,
   testAlarmIcon,
   addAlarmIcon,
   refreshIcon,
-} from './icons';
-import {DeviceTypes} from '../types';
+} from '../../assets/icons';
+import {DeviceTypes} from '../../types';
 
 export default function Alarmclock() {
   const [remoteData, setRemoteData] = React.useState({

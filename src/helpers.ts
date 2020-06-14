@@ -1,7 +1,6 @@
-import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useEffect, useRef} from 'react';
-import {DeviceTypes} from '../types';
+import {DeviceTypes, remoteUrl, Credentials} from './types';
 
 export function useInterval(callback: any, delay: number) {
   const savedCallback = useRef();
@@ -37,7 +36,6 @@ export const getData = async () => {
     return jsonValue !== undefined ? JSON.parse(jsonValue || ' ') : undefined;
   } catch (e) {
     // error reading value
-    Alert.alert('Error reading value');
   }
 };
 
@@ -74,4 +72,24 @@ export async function getRemoteData(deviceType: DeviceTypes) {
     },
   );
   return response;
+}
+
+export async function authMe(headers: Headers) {
+  const res = await fetch(`${remoteUrl}/api/login`, {
+    method: 'POST',
+    headers,
+  });
+  return res.status;
+}
+
+export async function saveData(credentials: Credentials) {
+  try {
+    const jsonValue = JSON.stringify(credentials);
+    await AsyncStorage.setItem('credentials', jsonValue);
+  } catch (e) {
+    console.log(e);
+    return false;
+    // saving error
+  }
+  return true;
 }

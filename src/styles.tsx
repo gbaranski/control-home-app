@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-export const styleSheet = StyleSheet.create({
+const styleSheet = StyleSheet.create({
   aboveRemainingTimeText: {
     alignSelf: 'flex-start',
     right: 25,
@@ -76,3 +76,5 @@ export const styleSheet = StyleSheet.create({
     alignSelf: 'flex-start',
   },
 });
+
+export default styleSheet;

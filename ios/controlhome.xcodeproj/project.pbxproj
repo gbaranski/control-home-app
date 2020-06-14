@@ -18,6 +18,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* controlhomeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* controlhomeTests.m */; };
 		68708E96247DC9D200383AAA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68708E95247DC9D200383AAA /* GoogleService-Info.plist */; };
+		68D42A2F2496CF8B00ED9B63 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68D42A2E2496CF8A00ED9B63 /* GoogleService-Info.plist */; };
 		7F6C70E93C717330A606E117 /* libPods-controlhome.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65B9109F8656D85038DF62A6 /* libPods-controlhome.a */; };
 		CCA94DF2C2ACDF9C9FC01B94 /* libPods-controlhome-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CCB460FF19F635E84AE129C1 /* libPods-controlhome-tvOS.a */; };
 		E1302FB01085E7646CDA28CE /* libPods-controlhome-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C28CE95FFE01888B2B657F6E /* libPods-controlhome-tvOSTests.a */; };
@@ -60,6 +61,7 @@
 		65B9109F8656D85038DF62A6 /* libPods-controlhome.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-controlhome.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		68708E95247DC9D200383AAA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		68708E97247DCA9E00383AAA /* controlhome.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = controlhome.entitlements; path = controlhome/controlhome.entitlements; sourceTree = "<group>"; };
+		68D42A2E2496CF8A00ED9B63 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8AC13B5918D2C6BE7C512A5B /* Pods-controlhome.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-controlhome.debug.xcconfig"; path = "Target Support Files/Pods-controlhome/Pods-controlhome.debug.xcconfig"; sourceTree = "<group>"; };
 		96B35C09CBC092267DA22BF7 /* Pods-controlhome-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-controlhome-tvOS.release.xcconfig"; path = "Target Support Files/Pods-controlhome-tvOS/Pods-controlhome-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		C04ABB74E7D1E6671D608F3A /* Pods-controlhome-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-controlhome-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-controlhome-tvOS/Pods-controlhome-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 		13B07FAE1A68108700A75B9A /* controlhome */ = {
 			isa = PBXGroup;
 			children = (
+				68D42A2E2496CF8A00ED9B63 /* GoogleService-Info.plist */,
 				68708E97247DCA9E00383AAA /* controlhome.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -348,6 +351,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				68D42A2F2496CF8B00ED9B63 /* GoogleService-Info.plist in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				68708E96247DC9D200383AAA /* GoogleService-Info.plist in Resources */,
 			);
@@ -768,6 +772,7 @@
 				PRODUCT_NAME = controlhome;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -791,6 +796,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gbaranski.controlhome;
 				PRODUCT_NAME = controlhome;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

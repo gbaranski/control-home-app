@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Layout, Text, Modal, Card, Button} from '@ui-kitten/components';
-import {styleSheet} from './styles';
+import styleSheet from '../../styles';
 import {useEffect} from 'react';
 import {
   useInterval,
@@ -8,9 +8,9 @@ import {
   getData,
   fetchUrl,
   getRemoteData,
-} from './helpers';
-import {switchIconOn, switchIconOff} from './icons';
-import {DeviceTypes} from '../types';
+} from '../../helpers';
+import {switchIconOn, switchIconOff} from '../../assets/icons';
+import {DeviceTypes} from '../../types';
 
 export default function Watermixer() {
   const [remoteData, setRemoteData] = React.useState({
