@@ -47,8 +47,7 @@ export async function fetchUrl(path: string, headers: Headers) {
     }
   });
 
-  const url = `https://api.gbaranski.com` + path;
-  const response = await fetch(url, {
+  const response = await fetch(`${remoteUrl}${path}`, {
     method: 'POST',
     headers,
   });
@@ -64,13 +63,10 @@ export async function getRemoteData(deviceType: DeviceTypes) {
       headers.append('password', credentials.password);
     }
   });
-  const response = await fetch(
-    `https://api.gbaranski.com/api/${deviceType}/getData`,
-    {
-      method: 'POST',
-      headers,
-    },
-  );
+  const response = await fetch(`${remoteUrl}/api/${deviceType}/getData`, {
+    method: 'POST',
+    headers,
+  });
   return response;
 }
 
@@ -89,7 +85,6 @@ export async function saveData(credentials: Credentials) {
   } catch (e) {
     console.log(e);
     return false;
-    // saving error
   }
   return true;
 }
