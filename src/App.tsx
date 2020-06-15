@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import * as eva from '@eva-design/eva';
-import {NavigationContainer, NavigationState} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {Alert} from 'react-native';
@@ -104,7 +104,7 @@ export function TabNavigator() {
   );
 }
 
-const BottomTabBar = (navigation: any, state: NavigationState) => (
+const BottomTabBar = ({navigation, state}: any) => (
   <BottomNavigation
     selectedIndex={state.index}
     onSelect={(index) => navigation.navigate(state.routeNames[index])}>
