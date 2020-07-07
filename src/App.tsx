@@ -62,6 +62,15 @@ export default function App() {
         const statusCode = await authMe(headers);
         if (statusCode === 200) {
           setLoggedIn(true);
+          if (_credentials.username === 'gbaranski') {
+            messaging()
+              .subscribeToTopic('admin')
+              .then(() => console.log('Subscribed to topic admin'));
+          } else {
+            messaging()
+              .unsubscribeFromTopic('admin')
+              .then(() => console.log('unsubscribed from topic admin'));
+          }
         } else if (statusCode === 401) {
           Alert.alert('Info', "Sorry, you're not authenticated");
         } else {
@@ -96,7 +105,7 @@ export default function App() {
 
 export function TabNavigator() {
   return (
-    <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
+    <Navigator tabBar={(props: any) => <BottomTabBar {...props} />}>
       <Screen name="Alarmclock" component={Alarmclock} />
       <Screen name="Watermixer" component={Watermixer} />
       <Screen name="Settings" component={Settings} />

@@ -63,8 +63,7 @@ export async function getRemoteData(deviceType: DeviceTypes) {
       headers.append('password', credentials.password);
     }
   });
-  const response = await fetch(`${remoteUrl}/api/${deviceType}/getData`, {
-    method: 'POST',
+  const response = await fetch(`${remoteUrl}/${deviceType}/getData`, {
     headers,
   });
   return response;

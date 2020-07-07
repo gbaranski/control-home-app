@@ -123,7 +123,7 @@ export default function Alarmclock() {
           onPress={async () => {
             setModalVisiblity(true);
             const headers = new Headers();
-            fetchUrl('/api/alarmclock/testSiren', headers).then(() => {
+            fetchUrl('/alarmclock/testSiren', headers).then(() => {
               setModalVisiblity(false);
             });
           }}>
@@ -152,7 +152,7 @@ export default function Alarmclock() {
           setModalVisiblity(true);
           const headers = new Headers();
           headers.append('state', `${remoteData.alarmState ? 0 : 1}`);
-          fetchUrl('/api/alarmclock/switchState', headers).then(() => {
+          fetchUrl('/alarmclock/switchState', headers).then(() => {
             setModalVisiblity(false);
             getAndSetData();
           });
@@ -184,7 +184,7 @@ export default function Alarmclock() {
               setModalVisiblity(true);
               const headers = new Headers();
               headers.append('time', `${outputTime.hour}:${outputTime.minute}`);
-              fetchUrl('/api/alarmclock/setTime', headers).then(async () => {
+              fetchUrl('/alarmclock/setTime', headers).then(async () => {
                 getAndSetData().then(() => setModalVisiblity(false));
               });
             }}>

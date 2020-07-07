@@ -52,7 +52,7 @@ export default function Watermixer() {
         onPress={async () => {
           setModalVisiblity(true);
           const headers = new Headers();
-          fetchUrl('/api/watermixer/start', headers).then(() => {
+          fetchUrl('/watermixer/startMixing', headers).then(() => {
             setModalVisiblity(false);
           });
         }}>
